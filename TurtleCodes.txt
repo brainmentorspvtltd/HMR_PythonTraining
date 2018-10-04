@@ -1,0 +1,27 @@
+>>> import turtle
+>>> turt = turtle.Pen()
+>>> turt.shape('turtle')
+>>> turt.forward(200)
+>>> turt.left(90)
+>>> turt.forward(200)
+>>> turt.left(90)
+>>> turt.forward(200)
+>>> turt.left(90)
+>>> turt.forward(200)
+>>> turt.left(90)
+>>> turt.reset()
+>>> for i in range(5):
+	turt.forward(200)
+	turt.left(90)
+
+	
+>>> turt.reset()
+>>> for i in range(15):
+	turt.forward(5*i)
+	turt.left(90)
+
+	
+>>> turt.reset()
+>>> for i in range(50):
+	turt.forward(5*i)
+	turt.left(90)
