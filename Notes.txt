@@ -1,0 +1,29 @@
+Ordered
+- List	- [] - collection of any type of data
+- ListComprehension
+- Tuples - () - - Immutable - which cannot be modified
+
+Unordered
+- Dictionary - {key:value}
+- Sets	     - {}
+Functional Programming
+
+1. User defined
+2. Pre defined - len, reversed, sorted, print, input, type
+
+Reusable
+
+pip install pygame
+pip install cx_freeze
+
+
+
+
+
+
+
+
+
+
+
+
