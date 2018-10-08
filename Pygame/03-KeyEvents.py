@@ -28,13 +28,28 @@ snakeLength = 1
 clock = pygame.time.Clock()
 FPS = 90
 
+sound_1 = pygame.mixer.Sound('game_over.wav')
+
 def snake(snakeList):
     for i in range(len(snakeList)):
         pygame.draw.rect(screen,black,[snakeList[i][0],
                                        snakeList[i][1],
                                        50,50])
 
-while True:
+def gameOver():
+    font = pygame.font.SysFont(None, 80)
+    text = font.render("Game Over", True, black)
+    screen.blit(text, (200,200))
+
+def score(counter):
+    font = pygame.font.SysFont(None, 30)
+    #text = font.render("Score "+str(counter), True, black)
+    text = font.render("Score : {}".format(counter), True, black)
+    screen.blit(text, (10,10))
+
+counter = 0
+game = True
+while game:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -77,12 +92,21 @@ while True:
         del snakeList[0]
 
     snake(snakeList)
+    score(counter)
 
     if rect_1.colliderect(rect_2):
         #print("Collision detection")
         random_x = random.randrange(0, width - 50)
         random_y = random.randrange(0, height - 50)
         snakeLength += 5
+        counter += 1
+
+    for each in snakeList[:-1]:
+        if snakeList[-1] == each:
+            #print("Game Over")
+            sound_1.play()
+            gameOver()
+            game = False
 
     if x > width:
         moveX = -1
