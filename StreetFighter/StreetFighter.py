@@ -48,13 +48,37 @@ class Player_1(pygame.sprite.Sprite):
 
         self.pos = 0
 
+        self.stand = True
+        self.walk = False
+        self.kick = False
+        self.punch = False
+
     def update(self):
-        self.pos += 5
+        self.pos += 2
+
+        self.moveX = 0
+
+        keypressed = pygame.key.get_pressed()
+        if keypressed[pygame.K_RIGHT]:
+            self.walk = True
+            self.moveX = 1
+        elif keypressed[pygame.K_LEFT]:
+            self.walk = True
+            self.moveX = -1
+        else:
+            self.walk = False
+            self.moveX = 0
+
+        self.rect.x += self.moveX
 
         frame = (self.pos // 30) % len(self.standingFrames)
         # print("Position",self.pos//30)
         # print("Frame",frame)
         self.image = self.standingFrames[frame]
+
+        if self.walk:
+            frame = (self.pos // 30) % len(self.walking_frames)
+            self.image = self.walking_frames[frame]
 
 player_sprite = pygame.image.load("images/ken_.png")
 
