@@ -1,4 +1,6 @@
 import pygame
+from pygame.locals import *
+
 pygame.init()
 width = 1200
 height = 600
@@ -6,6 +8,7 @@ screen = pygame.display.set_mode((width,height))
 background = pygame.image.load("images/background.png")
 
 black = 0,0,0
+blue = 0,0,255
 class Spritesheet():
     def __init__(self, file_name):
         pygame.sprite.Sprite.__init__(self)
@@ -23,6 +26,9 @@ class Player_1(pygame.sprite.Sprite):
     punchFrames = []
     kickFrames = []
     superKickFrame = []
+
+    isAttack = False
+    health = 450
 
     def __init__(self):
         super().__init__()
@@ -112,18 +118,37 @@ class Player_1(pygame.sprite.Sprite):
         # print("Frame",frame)
         self.image = self.standingFrames[frame]
 
+        self.hit = pygame.sprite.groupcollide(ken, ryu, False, False)
+
         if self.walk:
             frame = (self.pos // 30) % len(self.walking_frames)
             self.image = self.walking_frames[frame]
         elif self.punch:
             frame = (self.pos // 30) % len(self.punchFrames)
             self.image = self.punchFrames[frame]
+
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player_2.health -= 1
+
         elif self.kick:
             frame = (self.pos // 30) % len(self.kickFrames)
             self.image = self.kickFrames[frame]
+
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player_2.health -= 3
+
         elif self.superKick:
             frame = (self.pos // 30) % len(self.superKickFrame)
             self.image = self.superKickFrame[frame]
+
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player_2.health -= 5
 
 class Player_2(pygame.sprite.Sprite):
 
@@ -133,6 +158,9 @@ class Player_2(pygame.sprite.Sprite):
     kick_frames = []
     super_kick_frames = []
     hit_frames = []
+
+    health = 450
+    isAttack = False
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -224,6 +252,8 @@ class Player_2(pygame.sprite.Sprite):
         frame = (self.pos // 30) % len(self.standingFrames)
         self.image = self.standingFrames[frame]
 
+        self.hit = pygame.sprite.groupcollide(ryu, ken, False, False)
+
         if self.walk:
             frame = (self.pos // 30) % len(self.walking_frames)
             self.image = self.walking_frames[frame]
@@ -232,19 +262,46 @@ class Player_2(pygame.sprite.Sprite):
             frame = (self.pos // 30) % len(self.punch_frames)
             self.image = self.punch_frames[frame]
 
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player.health -= 1
+
         if self.kick:
             frame = (self.pos // 30) % len(self.kick_frames)
             self.image = self.kick_frames[frame]
 
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player.health -= 3
+
         if self.superKick:
             frame = (self.pos // 30) % len(self.super_kick_frames)
             self.image = self.super_kick_frames[frame]
+
+            if self.hit:
+                self.isAttack = True
+                punchSound.play()
+                player.health -= 5
+
+pygame.time.set_timer(USEREVENT,1000)
+
+def timer(seconds):
+    red = 255,0,0
+    font = pygame.font.Font('Digital_tech.otf', 50)
+    text = font.render("{}".format(str(seconds)), True, red)
+    screen.blit(text, (520,10))
 
 clock = pygame.time.Clock()
 FPS = 90
 
 player_sprite = pygame.image.load("images/ken_.png")
 player_sprite_2 = pygame.image.load("images/ryu_.png")
+
+punchSound = pygame.mixer.Sound("sounds/punch2.wav")
+backgroundSound = pygame.mixer.Sound("sounds/StreetFighter.ogg")
+backgroundSound.play(-1)
 
 all_sprites = pygame.sprite.Group()
 player = Player_1()
@@ -259,15 +316,49 @@ ryu.add(player_2)
 all_sprites.add(player)
 all_sprites.add(player_2)
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            quit()
-    screen.blit(background,(0,0))
+def kenHealth():
+    pygame.draw.rect(screen, blue, [10,10,player.health,40])
 
-    all_sprites.update()
-    all_sprites.draw(screen)
+def ryuHealth():
+    pygame.draw.rect(screen, blue, [width - 490,10,player_2.health,40])
 
-    pygame.display.update()
-    clock.tick(FPS)
+
+def homeScreen():
+    image_1 = pygame.image.load("images/image_1.jpg")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    main()
+
+        screen.blit(image_1, (0,0))
+        pygame.display.update()
+
+def main():
+    seconds = 30
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            elif event.type == USEREVENT:
+                seconds -= 1
+
+        screen.blit(background,(0,0))
+
+        all_sprites.update()
+        all_sprites.draw(screen)
+
+        kenHealth()
+        ryuHealth()
+
+        timer(seconds)
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+homeScreen()
