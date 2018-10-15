@@ -22,6 +22,7 @@ class Player_1(pygame.sprite.Sprite):
     standingFrames = []
     punchFrames = []
     kickFrames = []
+    superKickFrame = []
 
     def __init__(self):
         super().__init__()
@@ -43,6 +44,31 @@ class Player_1(pygame.sprite.Sprite):
         self.image = spritesheet.getImage(256, 731, 118, 243)
         self.walking_frames.append(self.image)
 
+        self.image = spritesheet.getImage(42, 490, 118, 240)
+        self.punchFrames.append(self.image)
+        self.image = spritesheet.getImage(260, 489, 166, 240)
+        self.punchFrames.append(self.image)
+        self.image = spritesheet.getImage(472, 487, 122, 245)
+        self.punchFrames.append(self.image)
+
+        self.image = spritesheet.getImage(250, 1451, 118, 250)
+        self.kickFrames.append(self.image)
+        self.image = spritesheet.getImage(428, 1457, 208, 248)
+        self.kickFrames.append(self.image)
+        self.image = spritesheet.getImage(676, 1461, 120, 244)
+        self.kickFrames.append(self.image)
+
+        self.image = spritesheet.getImage(18, 1701, 116, 248)
+        self.superKickFrame.append(self.image)
+        self.image = spritesheet.getImage(212, 1705, 172, 240)
+        self.superKickFrame.append(self.image)
+        self.image = spritesheet.getImage(426, 1707, 216, 238)
+        self.superKickFrame.append(self.image)
+        self.image = spritesheet.getImage(658, 1737, 188, 210)
+        self.superKickFrame.append(self.image)
+        self.image = spritesheet.getImage(898, 1727, 118, 218)
+        self.superKickFrame.append(self.image)
+
         self.rect = self.image.get_rect()
         self.rect.center = (width / 2 - 250, height / 2 + 70)
 
@@ -52,6 +78,7 @@ class Player_1(pygame.sprite.Sprite):
         self.walk = False
         self.kick = False
         self.punch = False
+        self.superKick = False
 
     def update(self):
         self.pos += 2
@@ -59,14 +86,23 @@ class Player_1(pygame.sprite.Sprite):
         self.moveX = 0
 
         keypressed = pygame.key.get_pressed()
-        if keypressed[pygame.K_RIGHT]:
+        if keypressed[pygame.K_d]:
             self.walk = True
             self.moveX = 3
-        elif keypressed[pygame.K_LEFT]:
+        elif keypressed[pygame.K_a]:
             self.walk = True
             self.moveX = -3
+        elif keypressed[pygame.K_w]:
+            self.punch = True
+        elif keypressed[pygame.K_s]:
+            self.kick = True
+        elif keypressed[pygame.K_f]:
+            self.superKick = True
         else:
             self.walk = False
+            self.punch = False
+            self.kick = False
+            self.superKick = False
             self.moveX = 0
 
         self.rect.x += self.moveX
@@ -79,6 +115,15 @@ class Player_1(pygame.sprite.Sprite):
         if self.walk:
             frame = (self.pos // 30) % len(self.walking_frames)
             self.image = self.walking_frames[frame]
+        elif self.punch:
+            frame = (self.pos // 30) % len(self.punchFrames)
+            self.image = self.punchFrames[frame]
+        elif self.kick:
+            frame = (self.pos // 30) % len(self.kickFrames)
+            self.image = self.kickFrames[frame]
+        elif self.superKick:
+            frame = (self.pos // 30) % len(self.superKickFrame)
+            self.image = self.superKickFrame[frame]
 
 class Player_2(pygame.sprite.Sprite):
 
