@@ -310,6 +310,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_4.clicked.connect(self.loginUser)
         self.pushButton_5.clicked.connect(self.submit)
         self.pushButton_6.clicked.connect(self.insertQuestion)
+        # self.pushButton_7.clicked.connect(self.startTest)
 
     def homeScreen(self):
         self.frame.hide()
@@ -391,6 +392,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def studentLogin(self):
         self.frame_4.show()
         self.frame_6.hide()
+        self.startTest()
 
     def insertQuestion(self):
         ques = self.lineEdit_6.text()
@@ -409,6 +411,25 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.teacherLogin()
         else:
             self.homeScreen()
+
+
+    def startTest(self):
+        try:
+            sub = self.comboBox_4.currentText()
+            query = 'SELECT * FROM questions WHERE subject = %s'
+            cursor.execute(query, (sub))
+            questions = cursor.fetchall()
+            # print(questions)
+
+            for ques in questions:
+                self.label_11.setText(ques[0])
+                self.radioButton.setText(ques[1])
+                self.radioButton_2.setText(ques[2])
+                self.radioButton_3.setText(ques[3])
+                self.radioButton_4.setText(ques[4])
+
+        except BaseException as ex:
+            print(ex)
 
 if __name__ == "__main__":
     import sys
