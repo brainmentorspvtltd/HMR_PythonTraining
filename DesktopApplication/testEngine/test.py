@@ -307,7 +307,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton.clicked.connect(self.showLogin)
         self.pushButton_2.clicked.connect(self.showRegister)
         self.pushButton_3.clicked.connect(self.registerUser)
-        self.pushButton_4.clicked.connect(self.login)
+        self.pushButton_4.clicked.connect(self.loginUser)
         self.pushButton_5.clicked.connect(self.submit)
 
     def showLogin(self):
@@ -336,17 +336,31 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         QMessageBox.about(self, 'Success', 'Inserted Successfully')
 
     def loginUser(self):
-        user = self.comboBox.currentText()
+        try:
+            user = self.comboBox.currentText()
 
-        user_id = self.lineEdit_4.text()
-        user_pwd = self.lineEdit_5.text()
+            user_id = self.lineEdit_4.text()
+            user_pwd = self.lineEdit_5.text()
 
-        if user == 'Student':
-            query = "SELECT * FROM students WHERE s_id = %s AND s_pwd = %s"
-        else:
-            query = "SELECT * FROM teachers WHERE t_id = %s AND t_pwd = %s"
+            if user == 'Student':
+                query = "SELECT * FROM students"
+            else:
+                query = "SELECT * FROM teachers"
 
-        cursor.execute(query, (user_id, user_pwd))
+            cursor.execute(query)
+
+            user_data = cursor.fetchall()
+            print(user_data)
+
+            for data in user_data:
+                if int(user_id) in data and user_pwd in data:
+                    print("User Exist")
+                    self.login()
+                    break
+            else:
+                print("Not Exist")
+        except BaseException as ex:
+            print(ex)
 
     def login(self):
         self.frame_3.show()
@@ -364,7 +378,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.frame_5.hide()
 
     def studentLogin(self):
-        self.frame_5.show()
+        self.frame_4.show()
         self.frame_6.hide()
 
 if __name__ == "__main__":
