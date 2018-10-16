@@ -309,6 +309,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.pushButton_3.clicked.connect(self.registerUser)
         self.pushButton_4.clicked.connect(self.loginUser)
         self.pushButton_5.clicked.connect(self.submit)
+        self.pushButton_6.clicked.connect(self.insertQuestion)
+
+    def homeScreen(self):
+        self.frame.hide()
 
     def showLogin(self):
         self.frame.show()
@@ -377,9 +381,34 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.frame_4.show()
         self.frame_5.hide()
 
+        self.lineEdit_6.setText("")
+        self.lineEdit_7.setText("")
+        self.lineEdit_8.setText("")
+        self.lineEdit_9.setText("")
+        self.lineEdit_10.setText("")
+        self.lineEdit_11.setText("")
+
     def studentLogin(self):
         self.frame_4.show()
         self.frame_6.hide()
+
+    def insertQuestion(self):
+        ques = self.lineEdit_6.text()
+        opt_1 = self.lineEdit_7.text()
+        opt_2 = self.lineEdit_8.text()
+        opt_3 = self.lineEdit_9.text()
+        opt_4 = self.lineEdit_10.text()
+        ans = self.lineEdit_11.text()
+        sub = self.comboBox_4.currentText()
+
+        query = "INSERT INTO questions VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(query, (ques, opt_1, opt_2, opt_3, opt_4, ans, sub))
+        ques = QMessageBox.question(self, 'Inserted', 'Insert another question ?',QMessageBox.Yes | QMessageBox.No)
+        # print(ques)
+        if ques ==  QMessageBox.Yes:
+            self.teacherLogin()
+        else:
+            self.homeScreen()
 
 if __name__ == "__main__":
     import sys
